@@ -1,4 +1,4 @@
-FROM maven
-WORKDIR /app
-COPY . .
-CMD ["mvn", "clean", "spring-boot:run"]
+FROM openjdk:23-oracle
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
