@@ -1,7 +1,9 @@
 package saw.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 public class Grade {
     @Id
@@ -13,21 +15,12 @@ public class Grade {
     @ManyToOne
     private Subject subject;
 
-    public Grade() {
-    }
+    public Grade() {}
 
-    public Grade(int value, User user, Subject subject) {
+    public Grade(Long id, int value, User user, Subject subject) {
         this.value = value;
         this.user = user;
         this.subject = subject;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
     }
 
     @Override

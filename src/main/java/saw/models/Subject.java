@@ -1,6 +1,7 @@
 package saw.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Data
 @Entity
 public class Subject {
     @Id
@@ -17,10 +19,9 @@ public class Subject {
     @ManyToMany
     private List<User> users;
 
-    public Subject() {
-    }
+    public Subject() {}
 
-    public Subject(String name) {
+    public Subject(Long id, String name) {
         this.name = name;
         this.users = new ArrayList<>();
     }
@@ -29,21 +30,9 @@ public class Subject {
         return !this.users.isEmpty();
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void addUser(User user) {
         if (getUser(id).isEmpty())
             this.users.add(user);
-    }
-
-    public List<User> getUsers() {
-        return this.users;
     }
 
     public Optional<User> getUser(Long id) {

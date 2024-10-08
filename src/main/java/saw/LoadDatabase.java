@@ -12,6 +12,8 @@ import saw.repositories.GradeRepository;
 import saw.repositories.SubjectRepository;
 import saw.repositories.UserRepository;
 
+import java.util.Optional;
+
 @Configuration
 public class LoadDatabase {
     private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
@@ -23,15 +25,24 @@ public class LoadDatabase {
             GradeRepository gradeRepository
     ) {
         return args -> {
-            User pepe = new User("pepe", "student");
-            log.info("Preloading {}", userRepository.save(pepe));
-            User carlos = new User("carlos", "teacher");
+            // --- USERS ---
+            Optional<User> foundPepe = userRepository.findById((long)1);
+            if (foundPepe.isEmpty()) {
+                User pepe = new User((long)1, "pepe", "student");
+                log.info("Preloading {}", userRepository.save(pepe));
+            }
+
+            User carlos = new User((long)2, "carlos", "teacher");
             log.info("Preloading {}", userRepository.save(carlos));
-            Subject math = new Subject("matemática");
+
+            // --- SUBJECTS ---
+            Subject math = new Subject((long)1, "matemática");
             math.addUser(carlos);
             math.addUser(pepe);
             log.info("Preloading {}", subjectRepository.save(math));
-            Grade mathGrade = new Grade(8, pepe, math);
+
+            // --- GRADES ---
+            Grade mathGrade = new Grade((long)1, 8, pepe, math);
             log.info("Preloading {}", gradeRepository.save(mathGrade));
         };
     }
