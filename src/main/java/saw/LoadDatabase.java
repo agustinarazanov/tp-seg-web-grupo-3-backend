@@ -26,9 +26,10 @@ public class LoadDatabase {
     ) {
         return args -> {
             // --- USERS ---
+            User pepe = new User((long)1, "pepe", "student");
+
             Optional<User> foundPepe = userRepository.findById((long)1);
             if (foundPepe.isEmpty()) {
-                User pepe = new User((long)1, "pepe", "student");
                 log.info("Preloading {}", userRepository.save(pepe));
             }
 
