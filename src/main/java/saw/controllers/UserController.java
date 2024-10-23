@@ -61,7 +61,7 @@ public class UserController {
         repository.deleteById(id);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/users/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
