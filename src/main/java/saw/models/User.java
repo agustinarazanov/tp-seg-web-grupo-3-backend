@@ -1,5 +1,6 @@
 package saw.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
@@ -14,12 +15,18 @@ public class User {
     private String name;
     private String role;
 
+    @Column(unique = true)
+    private String email;
+    private String password;
+
     public User() {}
 
-    public User(Long id, String name, String role) {
+    public User(Long id, String name, String role, String email, String password) {
         this.id = id;
         this.name = name;
         this.role = role;
+        this.email = email;
+        this.password = password;
     }
 
     @Override
