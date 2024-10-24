@@ -1,4 +1,4 @@
-package saw;
+package saw.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("users", "/users/**", "users/login/").permitAll()
+                        .requestMatchers("users", "/users/**", "users/login/", "/recaptcha-verify").permitAll()
                         .requestMatchers("/grades", "subjects").authenticated());
         return http.build();
     }

@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import saw.JwtTokenProvider;
+import saw.config.JwtTokenProvider;
 import saw.exceptions.UserNotFoundException;
 import saw.models.LoginRequest;
 import saw.models.User;

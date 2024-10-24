@@ -1,4 +1,4 @@
-package saw;
+package saw.config;
 
 import java.util.Map;
 import java.util.HashMap;
