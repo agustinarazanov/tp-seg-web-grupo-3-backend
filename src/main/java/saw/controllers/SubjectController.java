@@ -36,7 +36,8 @@ public class SubjectController {
     public Subject updateSubject(@PathVariable Long id, @RequestBody Subject newSubject) {
         return subjectRepository.findById(id).map(subject -> {
             if (newSubject.getName() != null) subject.setName(newSubject.getName());
-            if (newSubject.hasUsers()) newSubject.getUsers().forEach(subject::addUser);
+            if (newSubject.hasStudents()) newSubject.getStudents().forEach(subject::addStudent);
+            if (newSubject.getTeacher() != null) subject.setTeacher(newSubject.getTeacher());
             return subjectRepository.save(subject);
         }).orElseThrow(() -> new SubjectNotFoundException(id));
     }
@@ -48,11 +49,11 @@ public class SubjectController {
 
     @GetMapping("/subjects/{id}/users")
     public List<User> allUsers(@PathVariable Long id) {
-        return subjectRepository.findById(id).map(Subject::getUsers).orElseThrow(() -> new SubjectNotFoundException(id));
+        return subjectRepository.findById(id).map(Subject::getStudents).orElseThrow(() -> new SubjectNotFoundException(id));
     }
 
     @GetMapping("/subjects/{subjectId}/users/{userId}")
     public User oneUser(@PathVariable Long subjectId, @PathVariable Long userId) {
-        return subjectRepository.findById(subjectId).flatMap(subject -> subject.getUser(userId)).orElseThrow(() -> new UserNotFoundException(userId));
+        return subjectRepository.findById(subjectId).flatMap(subject -> subject.getStudent(userId)).orElseThrow(() -> new UserNotFoundException(userId));
     }
 }

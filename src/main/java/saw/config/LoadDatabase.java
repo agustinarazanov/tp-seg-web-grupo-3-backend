@@ -32,24 +32,24 @@ public class LoadDatabase {
     ) {
         return args -> {
             // --- USERS ---
-            User juan = new User((long)1, "juan", "student", "juan@gmail.com", passwordEncoder.encode("123456"));
+            User juan = new User(1L, "juan", "student", "juan@gmail.com", passwordEncoder.encode("123456"));
 
-            Optional<User> foundPepe = userRepository.findById((long)1);
+            Optional<User> foundPepe = userRepository.findById(1L);
             if (foundPepe.isEmpty()) {
                 log.info("Preloading {}", userRepository.save(juan));
             }
 
-            User carlos = new User((long)2, "carlos", "teacher", "carlos@gmail.com", passwordEncoder.encode("carlospass1234"));
+            User carlos = new User(2L, "carlos", "teacher", "carlos@gmail.com", passwordEncoder.encode("carlospass1234"));
             log.info("Preloading {}", userRepository.save(carlos));
 
             // --- SUBJECTS ---
-            Subject math = new Subject((long)1, "matemática");
-            math.addUser(carlos);
-            math.addUser(juan);
+            Subject math = new Subject(1L, "matemática");
+            math.setTeacher(carlos);
+            math.addStudent(juan);
             log.info("Preloading {}", subjectRepository.save(math));
 
             // --- GRADES ---
-            Grade mathGrade = new Grade((long)1, 8, juan, math);
+            Grade mathGrade = new Grade(1L, 8, juan, math);
             log.info("Preloading {}", gradeRepository.save(mathGrade));
         };
     }

@@ -21,21 +21,18 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UserNotFoundException {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
-        Set<String> rolesSet = new HashSet<String>();
+        Set<String> rolesSet = new HashSet<>();
         rolesSet.add(user.getRole());
 
         return new org.springframework.security.core.userdetails.User(
-            user.getEmail(), user.getPassword(), getAuthorities(rolesSet));
+                user.getEmail(), user.getPassword(), getAuthorities(rolesSet));
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(Set<String> roles) {
         return roles.stream()
-                    .map(role -> new SimpleGrantedAuthority(role))
-                    .collect(Collectors.toList());
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 }

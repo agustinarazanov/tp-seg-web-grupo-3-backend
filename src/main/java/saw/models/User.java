@@ -1,5 +1,6 @@
 package saw.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -17,6 +18,7 @@ public class User {
 
     @Column(unique = true)
     private String email;
+    @JsonIgnore
     private String password;
 
     public User() {}

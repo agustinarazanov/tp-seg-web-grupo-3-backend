@@ -3,3 +3,19 @@ services:
     build: .
     ports:
       - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: fuv938S763j
+    volumes:
+      - ./data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+    ports:
+      - "3307:3306"
