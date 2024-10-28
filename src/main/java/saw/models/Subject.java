@@ -23,7 +23,7 @@ public class Subject {
 
     public Subject() {}
 
-    public Subject(Long id, String name) {
+    public Subject(String name) {
         this.name = name;
         this.students = new ArrayList<>();
     }

@@ -1,5 +1,9 @@
 package saw.controllers;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import org.springframework.web.bind.annotation.*;
 import saw.exceptions.SubjectNotFoundException;
 import saw.exceptions.UserNotFoundException;
@@ -17,8 +21,21 @@ public class SubjectController {
         this.subjectRepository = repository;
     }
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @GetMapping("/subjects")
-    public List<Subject> all() {
+    public List<Subject> all(@RequestParam(name = "studentId", required = false) String studentId, @RequestParam(name = "teacherId", required = false) String teacherId) {
+
+        if (studentId != null) {
+            Query query = entityManager.createNativeQuery("select s.* from subject s join subject_students on id = subject_id where students_id = " + studentId + ";");
+            return query.getResultList();
+        }
+
+        if (teacherId != null) {
+            return subjectRepository.findByTeacherId(Long.parseLong(teacherId));
+        }
+
         return subjectRepository.findAll();
     }
 

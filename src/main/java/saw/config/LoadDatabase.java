@@ -31,25 +31,25 @@ public class LoadDatabase {
             GradeRepository gradeRepository
     ) {
         return args -> {
+            gradeRepository.deleteAll();
+            subjectRepository.deleteAll();
+            userRepository.deleteAll();
+
             // --- USERS ---
-            User juan = new User(1L, "juan", "student", "juan@gmail.com", passwordEncoder.encode("123456"));
+            User juan = new User("juan", "student", "juan@gmail.com", passwordEncoder.encode("123456"));
+            log.info("Preloading {}", userRepository.save(juan));
 
-            Optional<User> foundPepe = userRepository.findById(1L);
-            if (foundPepe.isEmpty()) {
-                log.info("Preloading {}", userRepository.save(juan));
-            }
-
-            User carlos = new User(2L, "carlos", "teacher", "carlos@gmail.com", passwordEncoder.encode("carlospass1234"));
+            User carlos = new User("carlos", "teacher", "carlos@gmail.com", passwordEncoder.encode("carlospass1234"));
             log.info("Preloading {}", userRepository.save(carlos));
 
             // --- SUBJECTS ---
-            Subject math = new Subject(1L, "matemática");
+            Subject math = new Subject("matemática");
             math.setTeacher(carlos);
             math.addStudent(juan);
             log.info("Preloading {}", subjectRepository.save(math));
 
             // --- GRADES ---
-            Grade mathGrade = new Grade(1L, 8, juan, math);
+            Grade mathGrade = new Grade(8, juan, math);
             log.info("Preloading {}", gradeRepository.save(mathGrade));
         };
     }

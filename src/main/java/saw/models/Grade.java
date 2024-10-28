@@ -17,7 +17,7 @@ public class Grade {
 
     public Grade() {}
 
-    public Grade(Long id, int value, User user, Subject subject) {
+    public Grade(int value, User user, Subject subject) {
         this.value = value;
         this.user = user;
         this.subject = subject;
