@@ -33,11 +33,14 @@ public class LoadDatabase {
         return args -> {
             // --- USERS ---
             User juan = new User((long)1, "juan", "student", "juan@gmail.com", passwordEncoder.encode("123456"));
+            User marcos = new User((long) 3, "marcos", "student", "marcos@gmail.com", passwordEncoder.encode("123456"));
 
-            Optional<User> foundPepe = userRepository.findById((long)1);
-            if (foundPepe.isEmpty()) {
+            Optional<User> foundJuan = userRepository.findById((long)1);
+            if (foundJuan.isEmpty()) {
                 log.info("Preloading {}", userRepository.save(juan));
             }
+
+            log.info("Preloading {}", userRepository.save(marcos));
 
             User carlos = new User((long)2, "carlos", "teacher", "carlos@gmail.com", passwordEncoder.encode("carlospass1234"));
             log.info("Preloading {}", userRepository.save(carlos));
