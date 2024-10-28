@@ -61,7 +61,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/users/login", "/recaptcha-verify").permitAll()
+                                .requestMatchers("/login", "/recaptcha-verify").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)

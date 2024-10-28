@@ -27,7 +27,7 @@ public class TokenController {
     @Value("${jwt.expiration}")
     private long expirationTime;
 
-    @PostMapping("/users/login")
+    @PostMapping("/login")
     public String token(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
