@@ -15,8 +15,6 @@ import saw.repositories.GradeRepository;
 import saw.repositories.SubjectRepository;
 import saw.repositories.UserRepository;
 
-import java.util.Optional;
-
 @Configuration
 public class LoadDatabase {
     private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);

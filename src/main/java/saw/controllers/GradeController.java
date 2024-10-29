@@ -30,12 +30,12 @@ public class GradeController {
         return repository.findBySubjectId(id);
     }
 
-    @GetMapping("/subjects/{subjectId}/users/{userId}/grades")
+    @GetMapping("/subjects/{subjectId}/students/{userId}/grades")
     public Grade oneByUser(@PathVariable Long subjectId, @PathVariable Long userId) {
         return repository.findBySubjectIdAndUserId(subjectId, userId).orElseThrow(() -> new GradeNotFoundException(subjectId, userId));
     }
 
-    @PutMapping("/subjects/{subjectId}/users/{userId}/grades")
+    @PutMapping("/subjects/{subjectId}/students/{userId}/grades")
     public Grade replaceGrade(@PathVariable Long subjectId, @PathVariable Long userId, @RequestBody Grade newGrade) {
         return repository.findBySubjectIdAndUserId(subjectId, userId).map(grade -> {
             grade.setValue(newGrade.getValue());

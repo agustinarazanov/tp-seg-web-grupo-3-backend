@@ -3,7 +3,6 @@ package saw.controllers;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
 import org.springframework.web.bind.annotation.*;
 import saw.exceptions.SubjectNotFoundException;
 import saw.exceptions.UserNotFoundException;
@@ -64,13 +63,18 @@ public class SubjectController {
         subjectRepository.deleteById(id);
     }
 
-    @GetMapping("/subjects/{id}/users")
-    public List<User> allUsers(@PathVariable Long id) {
+    @GetMapping("/subjects/{id}/students")
+    public List<User> allStudents(@PathVariable Long id) {
         return subjectRepository.findById(id).map(Subject::getStudents).orElseThrow(() -> new SubjectNotFoundException(id));
     }
 
-    @GetMapping("/subjects/{subjectId}/users/{userId}")
-    public User oneUser(@PathVariable Long subjectId, @PathVariable Long userId) {
+    @GetMapping("/subjects/{id}/teacher")
+    public User teacher(@PathVariable Long id) {
+        return subjectRepository.findById(id).map(Subject::getTeacher).orElseThrow(() -> new SubjectNotFoundException(id));
+    }
+
+    @GetMapping("/subjects/{subjectId}/students/{userId}")
+    public User oneStudent(@PathVariable Long subjectId, @PathVariable Long userId) {
         return subjectRepository.findById(subjectId).flatMap(subject -> subject.getStudent(userId)).orElseThrow(() -> new UserNotFoundException(userId));
     }
 }

@@ -29,6 +29,7 @@ import saw.services.UserService;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasScope;
 
 @Configuration
 @EnableWebSecurity
@@ -62,6 +63,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorize) ->
                         authorize
                                 .requestMatchers("/login", "/recaptcha-verify").permitAll()
+                                .requestMatchers("/subjects/**", "/grades/**").access(hasScope("teacher"))
                                 .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)

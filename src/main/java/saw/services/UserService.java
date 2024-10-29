@@ -1,8 +1,5 @@
 package saw.services;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +11,9 @@ import saw.exceptions.UserNotFoundException;
 import saw.models.User;
 import saw.repositories.UserRepository;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
@@ -23,16 +23,10 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UserNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
-        Set<String> rolesSet = new HashSet<>();
-        rolesSet.add(user.getRole());
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole()));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPassword(), getAuthorities(rolesSet));
-    }
-
-    private Collection<? extends GrantedAuthority> getAuthorities(Set<String> roles) {
-        return roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                user.getEmail(), user.getPassword(), authorities);
     }
 }

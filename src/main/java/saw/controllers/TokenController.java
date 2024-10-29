@@ -1,12 +1,14 @@
 package saw.controllers;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -35,14 +37,20 @@ public class TokenController {
                         loginRequest.getPassword()
                 )
         );
+
         Instant now = Instant.now();
+        String scope = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" "));
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expirationTime))
                 .subject(authentication.getName())
-                .claim("roles", authentication.getAuthorities())
+                .claim("scope", scope)
                 .build();
+
         JwsHeader header = JwsHeader.with(() -> "HS256").build();
         return this.encoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
     }
