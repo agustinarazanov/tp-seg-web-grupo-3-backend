@@ -11,20 +11,20 @@ public class Grade {
     private Long id;
     private int value;
     @ManyToOne
-    private User user;
+    private User student;
     @ManyToOne
     private Subject subject;
 
     public Grade() {}
 
-    public Grade(int value, User user, Subject subject) {
+    public Grade(int value, User student, Subject subject) {
         this.value = value;
-        this.user = user;
+        this.student = student;
         this.subject = subject;
     }
 
     @Override
     public String toString() {
-        return "Grade{" + "id=" + this.id + ", value='" + this.value + '\'' + ", user='" + this.user.getName() + '\'' + ", subject='" + this.subject.getName() + '\'' + '}';
+        return "Grade{" + "id=" + this.id + ", value='" + this.value + '\'' + ", user='" + this.student.getName() + '\'' + ", subject='" + this.subject.getName() + '\'' + '}';
     }
 }

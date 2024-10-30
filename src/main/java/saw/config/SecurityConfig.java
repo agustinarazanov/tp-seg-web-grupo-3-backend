@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -29,6 +30,7 @@ import saw.services.UserService;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasAnyScope;
 import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasScope;
 
 @Configuration
@@ -63,6 +65,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorize) ->
                         authorize
                                 .requestMatchers("/login", "/recaptcha-verify").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/students/**").access(hasAnyScope("student", "teacher"))
                                 .requestMatchers("/subjects/**", "/grades/**").access(hasScope("teacher"))
                                 .anyRequest().authenticated()
                 )

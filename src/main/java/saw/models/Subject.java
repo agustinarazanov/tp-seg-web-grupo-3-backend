@@ -1,5 +1,6 @@
 package saw.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,10 +19,12 @@ public class Subject {
     private String name;
     @ManyToOne
     private User teacher;
-    @ManyToMany
+    @ManyToMany @JsonIgnore
     private List<User> students;
 
-    public Subject() {}
+    public Subject() {
+        this.students = new ArrayList<>();
+    }
 
     public Subject(String name) {
         this.name = name;

@@ -26,7 +26,6 @@ public class UserController {
         return repository.save(user);
     }
 
-
     @GetMapping("/users/{id}")
     public User one(@PathVariable Long id) {
         return repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));

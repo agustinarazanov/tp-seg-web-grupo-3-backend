@@ -53,7 +53,6 @@ public class SubjectController {
         return subjectRepository.findById(id).map(subject -> {
             if (newSubject.getName() != null) subject.setName(newSubject.getName());
             if (newSubject.hasStudents()) newSubject.getStudents().forEach(subject::addStudent);
-            if (newSubject.getTeacher() != null) subject.setTeacher(newSubject.getTeacher());
             return subjectRepository.save(subject);
         }).orElseThrow(() -> new SubjectNotFoundException(id));
     }

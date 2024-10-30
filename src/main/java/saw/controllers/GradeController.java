@@ -20,6 +20,11 @@ public class GradeController {
         return repository.findAll();
     }
 
+    @GetMapping("/grades/{id}")
+    public Grade one(@PathVariable Long id) {
+        return repository.findById(id).orElseThrow(() -> new GradeNotFoundException(id));
+    }
+
     @PostMapping("/grades")
     public Grade newGrade(@RequestBody Grade grade) {
         return repository.save(grade);
@@ -30,16 +35,16 @@ public class GradeController {
         return repository.findBySubjectId(id);
     }
 
-    @GetMapping("/subjects/{subjectId}/students/{userId}/grades")
-    public Grade oneByUser(@PathVariable Long subjectId, @PathVariable Long userId) {
-        return repository.findBySubjectIdAndUserId(subjectId, userId).orElseThrow(() -> new GradeNotFoundException(subjectId, userId));
+    @GetMapping("/students/{id}/grades")
+    public List<Grade> allGradesByStudent(@PathVariable Long id) {
+        return repository.findByStudentId(id);
     }
 
-    @PutMapping("/subjects/{subjectId}/students/{userId}/grades")
-    public Grade replaceGrade(@PathVariable Long subjectId, @PathVariable Long userId, @RequestBody Grade newGrade) {
-        return repository.findBySubjectIdAndUserId(subjectId, userId).map(grade -> {
+    @PutMapping("/grades/{id}")
+    public Grade replaceGrade(@PathVariable Long id, @RequestBody Grade newGrade) {
+        return repository.findById(id).map(grade -> {
             grade.setValue(newGrade.getValue());
             return repository.save(grade);
-        }).orElseThrow(() -> new GradeNotFoundException(subjectId, userId));
+        }).orElseThrow(() -> new GradeNotFoundException(id));
     }
 }
