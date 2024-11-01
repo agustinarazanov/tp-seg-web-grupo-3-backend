@@ -1,5 +1,10 @@
 package saw.controllers;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import saw.exceptions.UserNotFoundException;
 import saw.models.User;
@@ -14,6 +19,20 @@ public class UserController {
 
     public UserController(UserRepository repository) {
         this.repository = repository;
+    }
+
+    @GetMapping("/current-user")
+    public User getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof Jwt jwt) {
+                String email = jwt.getClaim("sub");
+                return repository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(0L));
+            }
+        }
+
+        throw new Exception("No user logged in");
     }
 
     @GetMapping("/users")
