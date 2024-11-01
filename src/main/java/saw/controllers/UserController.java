@@ -37,9 +37,15 @@ public class UserController {
     @Transactional
     @PostMapping("/users")
     public void newUser(@RequestBody User user) {
-        entityManager.createNativeQuery("INSERT INTO user (email, password, name, role) VALUES ('" 
-            + user.getEmail() + "','" + passwordEncoder.encode(user.getPassword()) + "','" + user.getName() + "','" + user.getRole() + "');",
-            User.class).executeUpdate();
+        Long id = (Long) entityManager.createNativeQuery("SELECT next_val FROM user_seq;").getSingleResult();
+        entityManager.createNativeQuery("UPDATE user_seq SET next_val = next_val + 1;").executeUpdate();
+        entityManager.createNativeQuery(
+                "INSERT INTO user (id, email, password, name, role) VALUES ('"
+                        + id + "','"
+                        + user.getEmail() + "','"
+                        + passwordEncoder.encode(user.getPassword()) + "','"
+                        + user.getName() + "','"
+                        + user.getRole() + "');", User.class).executeUpdate();
     }
 
     @GetMapping("/users/{id}")
