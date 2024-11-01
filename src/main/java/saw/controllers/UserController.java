@@ -1,11 +1,18 @@
 package saw.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 import saw.exceptions.UserNotFoundException;
 import saw.models.User;
 import saw.repositories.UserRepository;
@@ -21,6 +28,11 @@ public class UserController {
         this.repository = repository;
     }
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @GetMapping("/current-user")
     public User getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -40,9 +52,18 @@ public class UserController {
         return repository.findAll();
     }
 
+    @Transactional
     @PostMapping("/users")
-    public User newUser(@RequestBody User user) {
-        return repository.save(user);
+    public void newUser(@RequestBody User user) {
+        Long id = (Long) entityManager.createNativeQuery("SELECT next_val FROM user_seq;").getSingleResult();
+        entityManager.createNativeQuery("UPDATE user_seq SET next_val = next_val + 1;").executeUpdate();
+        entityManager.createNativeQuery(
+                "INSERT INTO user (id, email, password, name, role) VALUES ('"
+                        + id + "','"
+                        + user.getEmail() + "','"
+                        + passwordEncoder.encode(user.getPassword()) + "','"
+                        + user.getName() + "','"
+                        + user.getRole() + "');", User.class).executeUpdate();
     }
 
     @GetMapping("/users/{id}")
