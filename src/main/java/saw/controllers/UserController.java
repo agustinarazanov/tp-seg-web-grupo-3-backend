@@ -14,6 +14,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import saw.exceptions.UserNotFoundException;
+import saw.models.Subject;
 import saw.models.User;
 import saw.repositories.UserRepository;
 
@@ -33,6 +34,7 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @GetMapping("/current-user")
     public User getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -83,6 +85,14 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) {
         repository.deleteById(id);
+    }
+
+    @GetMapping("/users/{userId}/subjects")
+    public List<Subject> getUserSubjects(@PathVariable Long userId) {
+        // Create query to join User and Subject_students tables
+        Query query = entityManager.createNativeQuery("SELECT s.* FROM subject s JOIN subject_students ss ON s.id = ss.subject_id WHERE ss.students_id = " + userId + ";", Subject.class);
+
+        return query.getResultList();
     }
 
 }
