@@ -30,6 +30,7 @@ import saw.services.UserService;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasAnyScope;
 import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasScope;
 
@@ -69,8 +70,9 @@ public class SecurityConfig {
                                 .requestMatchers("/subjects/**", "/grades/**").access(hasScope("teacher"))
                                 .anyRequest().authenticated()
                 )
+                .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((exceptions) ->
                         exceptions
