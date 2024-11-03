@@ -10,12 +10,14 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
+import saw.exceptions.MissingPrivilegesException;
 import saw.exceptions.UserNotFoundException;
 import saw.models.Subject;
 import saw.models.User;
 import saw.repositories.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class UserController {
@@ -62,12 +64,14 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public User replaceUser(@PathVariable Long id, @RequestBody User newUser) {
+    public User changeRol(@PathVariable Long id, @RequestBody User newUser) {
+        if (Objects.equals(newUser.getRole(), "admin")) {
+            throw new MissingPrivilegesException();
+        }
         return repository.findById(id).map(user -> {
-            user.setName(newUser.getName());
             user.setRole(newUser.getRole());
             return repository.save(user);
-        }).orElseGet(() -> repository.save(newUser));
+        }).orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @DeleteMapping("/users/{id}")
