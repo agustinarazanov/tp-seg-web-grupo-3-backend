@@ -34,13 +34,13 @@ public class LoadDatabase {
             userRepository.deleteAll();
 
             // --- USERS ---
-            User juan = new User("juan", "student", "juan@gmail.com", passwordEncoder.encode("123456"));
+            User juan = new User("Juan", "student", "jperez@gmail.com", passwordEncoder.encode("juanElMejorNoMeHackeen"));
             log.info("Preloading {}", userRepository.save(juan));
 
-            User carlos = new User("carlos", "teacher", "carlos@gmail.com", passwordEncoder.encode("carlospass1234"));
+            User carlos = new User("Carlos", "teacher", "crodriguez@gmail.com", passwordEncoder.encode("carlospass1234"));
             log.info("Preloading {}", userRepository.save(carlos));
 
-            User pepe = new User("pepe", "teacher", "pepe@gmail.com", passwordEncoder.encode("starwars"));
+            User pepe = new User("Pepe", "teacher", "pramirez@gmail.com", passwordEncoder.encode("starwars"));
             log.info("Preloading {}", userRepository.save(pepe));
 
             // --- SUBJECTS ---
