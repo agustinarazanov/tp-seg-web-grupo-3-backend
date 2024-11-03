@@ -2,10 +2,7 @@ package saw.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,17 +33,8 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/current-user")
-    public User getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof Jwt jwt) {
-                String email = jwt.getClaim("sub");
-                return repository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(0L));
-            }
-        }
-
-        throw new Exception("No user logged in");
+    public User getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
+        return repository.findByEmail(jwt.getSubject()).orElseThrow(UserNotFoundException::new);
     }
 
     @GetMapping("/users")
@@ -91,7 +79,6 @@ public class UserController {
     public List<Subject> getUserSubjects(@PathVariable Long userId) {
         // Create query to join User and Subject_students tables
         Query query = entityManager.createNativeQuery("SELECT s.* FROM subject s JOIN subject_students ss ON s.id = ss.subject_id WHERE ss.students_id = " + userId + ";", Subject.class);
-
         return query.getResultList();
     }
 

@@ -40,11 +40,18 @@ public class LoadDatabase {
             User carlos = new User("carlos", "teacher", "carlos@gmail.com", passwordEncoder.encode("carlospass1234"));
             log.info("Preloading {}", userRepository.save(carlos));
 
+            User pepe = new User("pepe", "teacher", "pepe@gmail.com", passwordEncoder.encode("starwars"));
+            log.info("Preloading {}", userRepository.save(pepe));
+
             // --- SUBJECTS ---
             Subject math = new Subject("matemática");
             math.setTeacher(carlos);
             math.addStudent(juan);
             log.info("Preloading {}", subjectRepository.save(math));
+
+            Subject literature = new Subject("literatura");
+            literature.setTeacher(pepe);
+            log.info("Preloading {}", subjectRepository.save(literature));
 
             // --- GRADES ---
             Grade mathGrade = new Grade(8, juan, math);

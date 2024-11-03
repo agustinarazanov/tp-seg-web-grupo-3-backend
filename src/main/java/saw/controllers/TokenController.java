@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import saw.models.LoginRequest;
+import saw.services.CustomUserDetails;
 
 @RestController
 public class TokenController {
@@ -47,6 +48,7 @@ public class TokenController {
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expirationTime))
+                .id(((CustomUserDetails) authentication.getPrincipal()).getId())
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .build();
