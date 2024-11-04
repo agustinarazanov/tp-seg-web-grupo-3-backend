@@ -49,6 +49,11 @@ public class LoadDatabase {
             math.addStudent(juan);
             log.info("Preloading {}", subjectRepository.save(math));
 
+            Subject physics = new Subject("física");
+            physics.setTeacher(carlos);
+            physics.addStudent(juan);
+            log.info("Preloading {}", subjectRepository.save(physics));
+
             Subject literature = new Subject("literatura");
             literature.setTeacher(pepe);
             log.info("Preloading {}", subjectRepository.save(literature));
@@ -56,6 +61,9 @@ public class LoadDatabase {
             // --- GRADES ---
             Grade mathGrade = new Grade(8, juan, math);
             log.info("Preloading {}", gradeRepository.save(mathGrade));
+
+            Grade pyhsicsGrade = new Grade(9, juan, physics);
+            log.info("Preloading {}", gradeRepository.save(pyhsicsGrade));
         };
     }
 }
