@@ -27,7 +27,7 @@ public class ExceptionsMiddleware {
     }
 
     @ExceptionHandler(MissingPrivilegesException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     String missingPrivilegesHandler(MissingPrivilegesException ex) {
         return ex.getMessage();
     }
