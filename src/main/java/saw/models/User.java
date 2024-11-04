@@ -33,10 +33,4 @@ public class User {
     public String toString() {
         return "User{" + "id=" + this.id + ", name='" + this.name + '\'' + ", role='" + this.role + '\'' + '}';
     }
-
-    // Getter and setter for password
-    @JsonIgnore
-    public String getPassword() {
-        return this.password;
-    }
 }
