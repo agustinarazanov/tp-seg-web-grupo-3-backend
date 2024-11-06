@@ -18,6 +18,7 @@ import saw.repositories.UserRepository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -36,7 +37,16 @@ public class UserController {
 
     @GetMapping("/current-user")
     public User getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
-        return repository.findByEmail(jwt.getSubject()).orElseThrow(UserNotFoundException::new);
+        Optional<User> foundUser = repository.findByEmail(jwt.getSubject());
+
+        if (foundUser.isPresent()) {
+            User user = foundUser.get();
+            user.setPassword(null);
+
+            return user;
+        }
+
+        throw new UserNotFoundException();
     }
 
     @GetMapping("/users")
